@@ -6,7 +6,6 @@ It needs Python grip installed (pip install grip).
     convert_notebook_to_nice_HTML.py NOTEBOOK_PATH
 
 """
-from os.path import join, dirname
 from subprocess import run
 from docopt import docopt
 
@@ -15,20 +14,21 @@ def main(arguments):
     # Create the markdown version of the notebook
     notebook = arguments['NOTEBOOK_PATH']
     command = 'jupyter nbconvert --to markdown %s' % notebook
-    print(command, '\n')
+    print('\n*', command)
     run(command.split(), check=True)
 
     # Export the markdown version to HTML
     markdown = notebook.replace('.ipynb', '.md')
     command = 'grip --export %s' % markdown
-    print(command, '\n')
+    print('\n*', command)
     run(command.split(), check=True)
 
+    # Replace the stylesheet
     html = markdown.replace('.md', '.html')
-    stylesheet_path = join(dirname(__file__), 'exported_notebooks.css')
-    replace_pattern = "s#<link rel=\"stylesheet\" href=\"//octicons.github.com/components/octicons/octicons/octicons.css\" />#<link rel=\"stylesheet\" href=\"%s\" />#" % stylesheet_path
+    stylesheet_tag = '<style>body .container {width: 97%;}</style>'
+    replace_pattern = "s#<link rel=\"stylesheet\" href=\"//octicons.github.com/components/octicons/octicons/octicons.css\" />#%s#" % stylesheet_tag
     command_args = ['sed', '-i', replace_pattern, html]
-    print(' '.join(command_args), '\n')
+    print('\n*', ' '.join(command_args))
     run(command_args, check=True)
 
 if __name__ == '__main__':
