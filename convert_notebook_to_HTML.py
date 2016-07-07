@@ -3,35 +3,37 @@
 It needs Python grip installed (pip install grip).
 
 Usage:
-    convert_notebook_to_nice_HTML.py NOTEBOOK_PATH [options]
+    convert_notebook_to_HTML.py NOTEBOOK_PATH [--zip]
 
 Options:
     -h --help       Show this screen.
-    --md-exists     Don't convert to markdown, assume the .md file is already
-                    there.
-    --html-exists   Don't use grip to convert to HTML, assume the HTML is
-                    already there.
+    -z --zip        Add the HTML and it's aux directory to a .zip file
+                    so you can send it easily over the webz.
 """
+from os import remove
 from subprocess import run
 from docopt import docopt
 
 
 def main(arguments):
     notebook = arguments['NOTEBOOK_PATH']
-    if not arguments['--md-exists']:
-        # Create the markdown version of the notebook
-        command = 'jupyter nbconvert --to markdown %s' % notebook
-        print('\n*', command)
-        run(command.split(), check=True)
 
+    # Create the markdown version of the notebook
+    command = 'jupyter nbconvert --to markdown %s' % notebook
+    print('\n*', command)
+    run(command.split(), check=True)
+
+    # Export the markdown version to HTML
     markdown = notebook.replace('.ipynb', '.md')
-    if not arguments['--html-exists']:
-        # Export the markdown version to HTML
-        command = 'grip --export %s' % markdown
-        print('\n*', command)
-        run(command.split(), check=True)
+    command = 'grip --export %s' % markdown
+    print('\n*', command)
+    run(command.split(), check=True)
 
-    # Replace the stylesheet
+    # Remove the markdown file when done
+    remove(markdown)
+
+    # Replace the stylesheet in the HTML
+    # FIXME: improve this
     html = markdown.replace('.md', '.html')
     stylesheet_tag = """
 <style>
@@ -51,6 +53,17 @@ def main(arguments):
     command_args = ['sed', '-i', replace_pattern, html]
     print('\n*', ' '.join(command_args))
     run(command_args, check=True)
+
+    if arguments['--zip']:
+        # Zip both the HTML file and it's aux folder to send them easily
+        # The aux folder is added by `grip --export` with a "_files" suffix.
+        command = 'zip {zip_file} {html} {aux_dir}'.format(**{
+            'html': html,
+            'aux_dir': html.replace('.html', '') + '_files',
+            'zip_file': html.replace('.html', '.zip')
+        })
+        print('\n*', command)
+        run(command.split(), check=True)
 
     print()
     print('Done!\n')
