@@ -39,11 +39,12 @@ def main(arguments):
 <style>
     body .container {width: 97%;}
     body .markdown-body table { display: table; border: 2px solid silver; width: auto; font-size: 0.8em; line-height: 1; }
+    body .markdown-body .highlight pre, .markdown-body pre { background-color: #d9d9d9; }
     body .markdown-body table th, .markdown-body table td { padding: 5px; }
     img { max-width: 1200px !important; }
 </style>
 """.replace('\n', ' ')
-    replace_pattern = "s#<link rel=\"stylesheet\" href=\"//octicons.github.com/components/octicons/octicons/octicons.css\" />#%s#" % stylesheet_tag
+    replace_pattern = "s$<link rel=\"stylesheet\" href=\"//octicons.github.com/components/octicons/octicons/octicons.css\" />$%s$" % stylesheet_tag
     command_args = ['sed', '-i', replace_pattern, html]
     print('\n*', ' '.join(command_args))
     run(command_args, check=True)
