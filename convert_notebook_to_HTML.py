@@ -58,7 +58,7 @@ def main(arguments):
     if arguments['--zip']:
         # Zip both the HTML file and it's aux folder to send them easily
         # The aux folder is added by `grip --export` with a "_files" suffix.
-        command = 'zip {zip_file} {html} {aux_dir}'.format(**{
+        command = 'zip -r {zip_file} {html} {aux_dir}'.format(**{
             'html': html,
             'aux_dir': html.replace('.html', '') + '_files',
             'zip_file': html.replace('.html', '.zip')
