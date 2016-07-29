@@ -48,7 +48,7 @@ def main():
 
         inta_sample_id, sample_id, read_number = match.groups(1)
         print('%s -> %s' % (inta_sample_id, sample_id))
-        new_fn = 'dna_{}.{}.fastq'.format(sample_id, read_number)
+        new_fn = '{}.{}.fastq'.format(sample_id, read_number)
 
         if isfile(new_fn):
             msg = ('(!) File {} already exists.\n\n'
