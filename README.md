@@ -24,3 +24,14 @@ That is, if you have a VCF with 10 markers and 10 samples, the CSV will have
 100 rows corresponding to 100 genotypes with their depth and quality data.
 
 I'm not putting the non-genotypic info of the VCF in the CSV.
+
+## Unzip and rename fastq.gz files
+This script will unzip every fastq.gz file in the directory where it's run.
+Afterwards, it will try to rename the unzipped files leaving the DNA-tags
+that it can extract from the original filename.
+The script assumes INTA IDs like "SAR123-<dna-tag-here>_S1_L001_R1_001.fastq.gz"
+where the dna-tag part and the R1 or R2 bits will be kept.
+
+To use it, just `cd` into the directory with the `.fastq.gz` files and run it:
+
+`./unzip_and_rename_fastqs.py`
