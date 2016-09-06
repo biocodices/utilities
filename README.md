@@ -35,3 +35,13 @@ where the dna-tag part and the R1 or R2 bits will be kept.
 To use it, just `cd` into the directory with the `.fastq.gz` files and run it:
 
 `./unzip_and_rename_fastqs.py`
+
+## PED to Haploview
+
+PLINK's formating with the `--recode HV` option is not enough for Haploview to read the files. At least I get errors with those files. The fix consists of replacing tabs with spaces, except between alleles of the same genotypes.
+
+This script deals with that:
+
+`./ped_to_haploview.py <ped_file>`
+
+Keep in mind that the ped_file has to be generated with PLINK's `--recode HV`.
